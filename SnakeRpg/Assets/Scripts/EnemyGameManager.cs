@@ -17,10 +17,17 @@ public class EnemyGameManager : MonoBehaviour
     {
         spawnDelay += Time.deltaTime;
 
-        if (spawnDelay > 10)
+        if (spawnDelay > 2)
         {
             var type = EnemyOffenceTypeExtensions.getRandomType();
-            var enemyObject = _objectPool.MakeObj(type);
+            Enemy enemyObject = _objectPool.MakeEnemyObj(type).GetComponent<Enemy>();
+            
+            if (enemyObject.getType() == EnemyOffenceType.REMOTE_AND_MULTI ||
+                enemyObject.getType() == EnemyOffenceType.REMOTE_AND_SINGLE)
+            {
+                enemyObject.SetBullet(_objectPool.MakeEnemyBulletObj(type));
+            }
+            
             enemyObject.transform.position = new Vector3(enemyCount, enemyCount);
             
             spawnDelay = 0;

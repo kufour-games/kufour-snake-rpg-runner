@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBasePrefab: {fileID: 1553465490668332398, guid: dc48df5d798674b2f9e63cdf33daac67, type: 3}
+  enemyBulletBasePrefab: {fileID: 2215476853396445536, guid: 9d7cc5a06e2ac4a39a60c3f7490821dc, type: 3}
 --- !u!1 &1833864919
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,8 @@ using UnityEngine;
 public class EnemyObjectPool : MonoBehaviour
 {
     public GameObject enemyBasePrefab;
+    
+    public GameObject enemyBulletBasePrefab;
 
     private GameObject[] _enemyShortAndSingles;
 
@@ -11,6 +13,10 @@ public class EnemyObjectPool : MonoBehaviour
     private GameObject[] _enemyRemoteAndSingles;
 
     private GameObject[] _enemyRemoteAndMulties;
+    
+    private GameObject[] _enemyRemoteAndSingleBullets;
+    
+    private GameObject[] _enemyRemoteAndMultiBullets;
 
     private GameObject[] _targetPool;
 
@@ -18,8 +24,13 @@ public class EnemyObjectPool : MonoBehaviour
     {
         _enemyShortAndSingles = new GameObject[5];
         _enemyShortAndMulties = new GameObject[5];
+        
         _enemyRemoteAndSingles = new GameObject[5];
+        _enemyRemoteAndSingleBullets = new GameObject[5];
+        
         _enemyRemoteAndMulties = new GameObject[5];
+        _enemyRemoteAndMultiBullets = new GameObject[5];
+        
         Generate();
     }
 
@@ -43,6 +54,8 @@ public class EnemyObjectPool : MonoBehaviour
         {
             _enemyRemoteAndSingles[index] = Instantiate(enemyBasePrefab);
             _enemyRemoteAndSingles[index].SetActive(false);
+            _enemyRemoteAndSingleBullets[index] = Instantiate(enemyBulletBasePrefab);
+            _enemyRemoteAndSingleBullets[index].SetActive(false);
             EnemyInitialize(_enemyRemoteAndSingles, index, EnemyOffenceType.REMOTE_AND_SINGLE);
         }
 
@@ -50,6 +63,8 @@ public class EnemyObjectPool : MonoBehaviour
         {
             _enemyRemoteAndMulties[index] = Instantiate(enemyBasePrefab);
             _enemyRemoteAndMulties[index].SetActive(false);
+            _enemyRemoteAndMultiBullets[index] = Instantiate(enemyBulletBasePrefab);
+            _enemyRemoteAndMultiBullets[index].SetActive(false);
             EnemyInitialize(_enemyRemoteAndMulties, index, EnemyOffenceType.REMOTE_AND_MULTI);
         }
     }
@@ -60,7 +75,7 @@ public class EnemyObjectPool : MonoBehaviour
 
         enemy.Initialize(
             offence: 10, // todo 각 값들도 DTO로 전달
-            offenceSpeed: 10,
+            offenceSpeed: 2,
             defence: 10,
             health: 10,
             point: 10,
@@ -69,7 +84,7 @@ public class EnemyObjectPool : MonoBehaviour
         );
     }
 
-    public GameObject MakeObj(EnemyOffenceType type)
+    public GameObject MakeEnemyObj(EnemyOffenceType type)
     {
         switch (type)
         {
@@ -84,6 +99,36 @@ public class EnemyObjectPool : MonoBehaviour
                 break;
             case EnemyOffenceType.REMOTE_AND_MULTI:
                 _targetPool = _enemyRemoteAndMulties;
+                break;
+        }
+
+        foreach (var targetObject in _targetPool)
+        {
+            if (!targetObject.activeSelf) // 비 활성화 되어있다면 반환하라
+            {
+                targetObject.SetActive(true);
+                return targetObject;
+            }
+        }
+
+        return null;
+    }
+    
+    public GameObject MakeEnemyBulletObj(EnemyOffenceType type)
+    {
+        switch (type)
+        {
+            case EnemyOffenceType.SHORT_AND_SINGLE:
+                _targetPool = _enemyShortAndSingles; // todo 변경
+                break;
+            case EnemyOffenceType.SHORT_AND_MULTI:
+                _targetPool = _enemyShortAndMulties; // // todo 변경
+                break;
+            case EnemyOffenceType.REMOTE_AND_SINGLE:
+                _targetPool = _enemyRemoteAndSingleBullets;
+                break;
+            case EnemyOffenceType.REMOTE_AND_MULTI:
+                _targetPool = _enemyRemoteAndMultiBullets;
                 break;
         }
 
