@@ -10,7 +10,7 @@ public enum EnemyOffenceType
 
 public static class EnemyOffenceTypeExtensions
 {
-    public static EnemyOffenceType getRandomType()
+    public static EnemyOffenceType GetRandomType()
     {
         switch (Random.Range(0, 3))
         {
