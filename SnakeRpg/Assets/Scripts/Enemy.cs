@@ -33,6 +33,7 @@ public class Enemy : MonoBehaviour
         EnemyOffenceType type
     )
     {
+
         this.offence = offence;
         this.offenceSpeed = offenceSpeed;
         this.defence = defence;
