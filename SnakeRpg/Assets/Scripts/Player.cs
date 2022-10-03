@@ -38,17 +38,20 @@ public class Player : MonoBehaviour
      */
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.CompareTag("Enemy"))
+        if (col.gameObject.CompareTag("Enemy") || col.gameObject.CompareTag("EnemySward"))
         {
+            Vector3 dirVec = transform.position - col.gameObject.transform.position;
+            
+            Rigidbody2D rigid = GetComponent<Rigidbody2D>();
+
+            transform.position = (dirVec.normalized * 3) - transform.position;
+            
             
         } else if (col.gameObject.CompareTag("EnemyBullet"))
         {
             var bullet = col.gameObject.GetComponent<EnemyBullet>();
-            health = health - bullet.getDamage();
-        } else if (col.gameObject.CompareTag("EnemySward"))
-        {
-            
-        }
+            health -= bullet.getDamage();
+        } 
         
         // if (col.gameObject.CompareTag("EnemyBullet") || col.gameObject.CompareTag("Enemy"))
         // {
