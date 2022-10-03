@@ -1,30 +1,43 @@
 
-using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class EnemyGameManager : MonoBehaviour
 {
 
-    private float spawnDelay;
+    private float _spawnDelay = 0;
 
     [SerializeField]
-    private EnemyObjectPool _objectPool;
+    private EnemyObjectPool objectPool;
 
-    private int enemyCount = 0; 
+    private int _enemyCount; 
     
     private void Update()
     {
-        spawnDelay += Time.deltaTime;
+        _spawnDelay += Time.deltaTime;
 
-        if (spawnDelay > 10)
+        if (_spawnDelay > 2)
         {
-            var type = EnemyOffenceTypeExtensions.getRandomType();
-            var enemyObject = _objectPool.MakeObj(type);
-            enemyObject.transform.position = new Vector3(enemyCount, enemyCount);
+            EnemyOffenceType type = EnemyOffenceTypeExtensions.GetRandomType();
+            GameObject enemyGameObject = objectPool.MakeEnemyObj(type);
+
+            if (enemyGameObject is null) // == null 이라고하면 경고 나옴, https://tsyang.tistory.com/40 참고
+            {
+                Debug.LogWarning("the " + type + "Enemy is full");
+                return;
+            }
+
+            Enemy enemy = enemyGameObject.GetComponent<Enemy>();
+
+            if (enemy.getType() == EnemyOffenceType.REMOTE_AND_MULTI ||
+                enemy.getType() == EnemyOffenceType.REMOTE_AND_SINGLE)
+            {
+                enemy.SetBullet(objectPool.MakeEnemyBulletObj(type));
+            }
             
-            spawnDelay = 0;
-            enemyCount++;
+            enemy.transform.position = new Vector3(_enemyCount, _enemyCount);
+            
+            _spawnDelay = 0;
+            _enemyCount++;
         }
     }
 }

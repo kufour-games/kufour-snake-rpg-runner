@@ -1,28 +1,22 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    private int offence; // 파워
-    [SerializeField]
-    private int offenceSpeed; // 연사
-    [SerializeField]
-    private int defence; // 방어력
-    [SerializeField]
-    private int health; // 체력
+    [SerializeField] private int offence; // 파워
+    [SerializeField] private int offenceSpeed; // 연사
+    [SerializeField] private int defence; // 방어력
+    [SerializeField] private int health; // 체력
 
-    [SerializeField]
-    private int point;
-    [SerializeField]
-    private int score;
-    [SerializeField]
-    private EnemyOffenceType type;
+    [SerializeField] private int point;
+    [SerializeField] private int score;
+    [SerializeField] private EnemyOffenceType type;
+    [SerializeField] private GameObject shortAttack;
 
     private float offenceDelay;
-    
+
+    private GameObject bullet;
+
     public void Initialize(
         int offence,
         int offenceSpeed,
@@ -43,7 +37,17 @@ public class Enemy : MonoBehaviour
         this.type = type;
     }
 
-    private void Update()
+    public void SetBullet(GameObject bullet)
+    {
+        this.bullet = bullet;
+    }
+
+    public EnemyOffenceType getType()
+    {
+        return this.type;
+    }
+
+    private void Update() // todo 이거 태형이가 하는 방식으로 변경
     {
         offenceDelay += Time.deltaTime;
 
@@ -56,7 +60,26 @@ public class Enemy : MonoBehaviour
 
     private void Attack() // todo type 별로 공격에 대한 것 만들기
     {
-        Debug.Log(type + " 공격");
+        if (type is EnemyOffenceType.REMOTE_AND_SINGLE or EnemyOffenceType.REMOTE_AND_MULTI)
+        {
+            bullet.transform.position = transform.position;
+            Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+            Vector3 dirVec = Vector3.down;
+            rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);
+        }
+        else if (type is EnemyOffenceType.SHORT_AND_SINGLE or EnemyOffenceType.SHORT_AND_MULTI)
+        {
+            // todo 근거리 공격은 새로운 오브젝트를 만들어 내는게 맞는것인가 ?
+            var attackObject = Instantiate(shortAttack);
+            attackObject.transform.position = transform.position;
+            StartCoroutine(DestroyAttack(attackObject));
+        }
+    }
+
+    private IEnumerator DestroyAttack(GameObject attack)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(attack);
     }
 
     // todo 죽었을 때 상호작용 interface ?
