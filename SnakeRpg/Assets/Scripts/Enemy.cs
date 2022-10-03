@@ -68,7 +68,6 @@ public class Enemy : MonoBehaviour
         }
         else if (type is EnemyOffenceType.SHORT_AND_SINGLE or EnemyOffenceType.SHORT_AND_MULTI)
         {
-            // todo 근거리 공격은 새로운 오브젝트를 만들어 내는게 맞는것인가 ?
             var attackObject = Instantiate(shortAttack);
             attackObject.transform.position = transform.position;
             StartCoroutine(DestroyAttack(attackObject));
