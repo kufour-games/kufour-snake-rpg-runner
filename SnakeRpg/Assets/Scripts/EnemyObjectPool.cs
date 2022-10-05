@@ -57,6 +57,7 @@ public class EnemyObjectPool : MonoBehaviour
             _enemyRemoteAndSingleBullets[index] = Instantiate(enemyBulletBasePrefab);
             _enemyRemoteAndSingleBullets[index].SetActive(false);
             EnemyInitialize(_enemyRemoteAndSingles, index, EnemyOffenceType.REMOTE_AND_SINGLE);
+            EnemyBulletInitialize(_enemyRemoteAndSingleBullets, index, 20);
         }
 
         for (int index = 0; index < _enemyRemoteAndMulties.Length; index++)
@@ -66,6 +67,7 @@ public class EnemyObjectPool : MonoBehaviour
             _enemyRemoteAndMultiBullets[index] = Instantiate(enemyBulletBasePrefab);
             _enemyRemoteAndMultiBullets[index].SetActive(false);
             EnemyInitialize(_enemyRemoteAndMulties, index, EnemyOffenceType.REMOTE_AND_MULTI);
+            EnemyBulletInitialize(_enemyRemoteAndMultiBullets, index, 10);
         }
     }
 
@@ -82,6 +84,15 @@ public class EnemyObjectPool : MonoBehaviour
             score: 10,
             type: type
         );
+    }
+    
+    private void EnemyBulletInitialize(GameObject[] gameObjects, int index, int damage)
+    {
+        EnemyBullet bullet = gameObjects[index].GetComponent<EnemyBullet>();
+        
+        Debug.Log(bullet);
+
+        bullet.Initialize(damage);
     }
 
     public GameObject MakeEnemyObj(EnemyOffenceType type)
